@@ -1,3 +1,5 @@
-# CSV Cleaning Utilities
+## CSV Cleaning Utilities
 
-A repository of python modules to read and clean survey files generated from internet surveys
+
+Internet survey files are generally generated as CSVs or excel
+The modules here are developed to parse and clean those csv files. 
