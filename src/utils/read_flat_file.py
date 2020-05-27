@@ -35,19 +35,25 @@ class ReadFile(ReadUtils):
         :return:
         """
         boolean = self.check_path(path)
-        dialect = None
         if boolean:
             try:
                 with open(path, newline='') as csv_file:
                     dialect = csv.Sniffer().sniff(csv_file.read(1024))
                 return dialect.delimiter
-            except error as e
-        return "not a valid path"
+            except error as e:
+                LOGGER.error(e)
+        return None
 
-    # TODO: modify to get the delimiter from the file and use it in this
+
     def read_file(self, path):
+        """
+        read file as pandas dataframe
+        :param path:
+        :return:
+        """
         boolean = self.check_path(path)
         df = None
         if boolean:
-            df = pd.read_csv(path)
+            delimiter = self.get_delimiter(path)
+            df = pd.read_csv(path, delimiter=delimiter)
         return df
