@@ -13,7 +13,8 @@ LOGGER = logging.getLogger()
 
 class ReadFile(ReadUtils):
 
-    def check_path(self, path):
+    @staticmethod
+    def check_path(path):
         """
         check if the path exists, if not gracefully exit
         :param path: input file path
@@ -44,7 +45,6 @@ class ReadFile(ReadUtils):
                 LOGGER.error(e)
         return None
 
-
     def read_file(self, path):
         """
         read file as pandas dataframe
@@ -57,3 +57,4 @@ class ReadFile(ReadUtils):
             delimiter = self.get_delimiter(path)
             df = pd.read_csv(path, delimiter=delimiter)
         return df
+
