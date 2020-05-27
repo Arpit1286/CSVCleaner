@@ -37,4 +37,15 @@ class TestGetDelimiter(object):
 
 class TestReadFile(object):
 
-    def test_on_
+    def test_on_regular_csv(self):
+        pass
+
+    def test_on_malformed_csv(self):
+        pass
+
+    def test_on_wrong_path(self):
+        pass
+
+    def test_on_delimiter(self):
+        pass
+
