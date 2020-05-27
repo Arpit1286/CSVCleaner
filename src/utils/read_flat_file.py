@@ -14,7 +14,7 @@ LOGGER = logging.getLogger()
 class ReadFile(ReadUtils):
 
     @staticmethod
-    def check_path(path):
+    def check_path(path: str) -> bool:
         """
         check if the path exists, if not gracefully exit
         :param path: input file path
