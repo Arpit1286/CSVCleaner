@@ -1,5 +1,5 @@
 import pytest
-from utils.read_flat_file import *
+from src.utils.read_flat_file import *
 
 
 class TestCheckPath(object):
