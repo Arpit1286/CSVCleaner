@@ -28,7 +28,7 @@ class ReadFile(ReadUtils):
             return False
 
     # using csv Sniffer to get delimiter
-    def get_delimiter(self, path):
+    def get_delimiter(self, path: str):
         """
         infer the delimiter using the csv sniffer
         :param path:

@@ -4,7 +4,7 @@ import os
 from src import utils
 
 
-methods = utils.read_flat_file.ReadFile
+methods = utils.read_flat_file.ReadFile()
 
 
 class TestCheckPath(object):
@@ -40,28 +40,73 @@ class TestCheckPath(object):
 class TestGetDelimiter(object):
 
     @pytest.fixture
-    def csv_file(self, tmpdir):
-        csv_file = tmpdir.mkdir("sub").join("zillow.csv")
-        content = """"Index", "Living Space (sq ft)", "Beds", "Baths", "Zip", "Year", "List Price ($)"
-        1, 2222, 3, 3.5, 32312, 1981, 250000
-        2, 1628, 3, 2,   32308, 2009, 185000
-        3, 3824, 5, 4,   32312, 1954, 399000
-        4, 1137, 3, 2,   32309, 1993, 150000
+    def csv_file(self, tmp_path):
+        file_name = "zillow.csv"
+        d = tmp_path / "sub"
+        d.mkdir()
+        path = d / file_name
+        content = """"Index", "Living Space (sq ft)", "Beds", "Baths", "Zip", "Year", "List Price ($)\n"
+        1, 2222, 3, 3.5, 32312, 1981, 250000\n
+        2, 1628, 3, 2,   32308, 2009, 185000\n
+        3, 3824, 5, 4,   32312, 1954, 399000\n
+        4, 1137, 3, 2,   32309, 1993, 150000\n
         5, 3560, 6, 4,   32309, 1973, 315000"""
-        csv_file.write(content)
-        yield csv_file
+        path.write_text(content)
+        yield path
+        os.remove(path)
 
-    def test_on_comma_delimiter(self):
-        pass
+    @pytest.fixture
+    def tsv_file(self, tmp_path):
+        file_name = "zillow.csv"
+        d = tmp_path / "sub"
+        d.mkdir()
+        path = d / file_name
+        content = """"Index"\t"Living Space (sq ft)"\t"Beds"\t"Baths"\t"Zip"\t"Year"\t"List Price ($)\n"
+         1\t2222\t3\t3.5\t32312\t1981 250000\n
+         2\t1628\t3\t2\t32308\t2009\t185000\n
+         3\t3824\t5\t4\t32312\t1954\t399000\n
+         4\t1137\t3\t2\t32309\t1993\t150000\n
+         5\t3560\t6\t4\t32309\t1973\t315000"""
+        path.write_text(content)
+        yield path
+        os.remove(path)
 
-    def test_on_tab_delimiter(self):
-        pass
+    @pytest.fixture
+    def colon_file(self, tmp_path):
+        file_name = "zillow.csv"
+        d = tmp_path / "sub"
+        d.mkdir()
+        path = d / file_name
+        content = """"Index": "Living Space (sq ft)": "Beds": "Baths": "Zip": "Year": "List Price ($)\n"
+        1: 2222: 3: 3.5: 32312: 1981: 250000\n
+        2: 1628: 3: 2:   32308: 2009: 185000\n
+        3: 3824: 5: 4:   32312: 1954: 399000\n
+        4: 1137: 3: 2:   32309: 1993: 150000\n
+        5: 3560: 6: 4:   32309: 1973: 315000"""
+        path.write_text(content)
+        yield path
+        os.remove(path)
 
-    def test_on_colon_delimiter(self):
-        pass
+    def test_on_comma_delimiter(self, csv_file):
+        expected = ","
+        path = csv_file
+        actual = methods.get_delimiter(path)
+        message = "comma delimiter should return ',' but returns {0}".format(path)
+        assert actual is expected, message
 
-    def test_on_mixed_delimiter(self):
-        pass
+    def test_on_tab_delimiter(self, tsv_file):
+        expected = "\t"
+        path = tsv_file
+        actual = methods.get_delimiter(path)
+        message = "tab delimiter should return ',' but returns {0}".format(path)
+        assert actual is expected, message
+
+    def test_on_colon_delimiter(self, colon_file):
+        expected = ":"
+        path = colon_file
+        actual = methods.get_delimiter(path)
+        message = "colon delimiter should return ',' but returns {0}".format(path)
+        assert actual is expected, message
 
     def test_exception(self):
         pass
