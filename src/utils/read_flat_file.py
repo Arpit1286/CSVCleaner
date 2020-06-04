@@ -25,7 +25,6 @@ class ReadFile(ReadUtils):
             return True
         else:
             LOGGER.error("File / path not present")
-            sys.exit(-1)
             return False
 
     # using csv Sniffer to get delimiter
@@ -41,7 +40,7 @@ class ReadFile(ReadUtils):
                 with open(path, newline='') as csv_file:
                     dialect = csv.Sniffer().sniff(csv_file.read(1024))
                 return dialect.delimiter
-            except error as e:
+            except csv.Error as e:
                 LOGGER.error(e)
         return None
 

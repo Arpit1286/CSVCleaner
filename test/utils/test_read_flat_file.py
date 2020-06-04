@@ -1,17 +1,39 @@
 import pytest
-from src.utils.read_flat_file import *
+import os
+
+from src import utils
+
+
+methods = utils.read_flat_file.ReadFile
 
 
 class TestCheckPath(object):
 
-    def test_on_relative_path(self):
-        pass
+    @pytest.fixture
+    def create_file(self, tmp_path):
+        d = tmp_path / "sub"
+        d.mkdir()
+        p = d / "hello.txt"
+        p.write_text("content")
+        yield p
 
-    def test_on_absolute_path(self):
-        pass
+    def test_create_file(self, tmp_path):
+        d = tmp_path / "sub"
+        d.mkdir()
+        p = d / "hello.txt"
+        p.write_text("content")
+        assert p.read_text() == "content"
+        assert len(list(tmp_path.iterdir())) == 1
+
+    def test_on_path(self, create_file):
+        p = create_file
+        path_val = methods.check_path(p)
+        assert path_val is True
 
     def test_on_wrong_path(self):
-        pass
+        path = "/some/wrong/path"
+        path_value = methods.check_path(path)
+        assert path_value is False
 
     def test_exception(self):
         pass
