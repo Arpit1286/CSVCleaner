@@ -46,7 +46,7 @@ class ReadFile(ReadUtils):
 
     def read_file(self, path):
         """
-        read file as pandas dataframe
+        read csv file as pandas dataframe
         :param path:
         :return:
         """

@@ -1,8 +1,8 @@
 import pytest
 import os
+import pandas as pd
 
 from src import utils
-
 
 methods = utils.read_flat_file.ReadFile()
 
@@ -53,7 +53,6 @@ class TestGetDelimiter(object):
         5, 3560, 6, 4,   32309, 1973, 315000"""
         path.write_text(content)
         yield path
-        os.remove(path)
 
     @pytest.fixture
     def tsv_file(self, tmp_path):
@@ -69,7 +68,6 @@ class TestGetDelimiter(object):
          5\t3560\t6\t4\t32309\t1973\t315000"""
         path.write_text(content)
         yield path
-        os.remove(path)
 
     @pytest.fixture
     def colon_file(self, tmp_path):
@@ -85,44 +83,91 @@ class TestGetDelimiter(object):
         5: 3560: 6: 4:   32309: 1973: 315000"""
         path.write_text(content)
         yield path
-        os.remove(path)
+
+    @pytest.fixture
+    def malformed_file(self, tmp_path):
+        file_name = "zillow.csv"
+        d = tmp_path / "sub"
+        d.mkdir()
+        path = d / file_name
+        content = """"Index";"Living Space (sq ft)" "Beds";"Baths" "Zip" "Year" "List Price ($)\n"
+        1: 2222: 3: 3.5: 32312: 250000\n
+        2: 1628: 3: 2:   32308; 2009: 185000\n
+        3: 3824: 5: 4:   32312: 1954: 399000\n
+        4: 1137: 3; 2:   32309; 1993: 150000\n
+        5: 3560: 6: 4:   32309: 1973: 315000"""
+        path.write_text(content)
+        yield path
 
     def test_on_comma_delimiter(self, csv_file):
         expected = ","
         path = csv_file
         actual = methods.get_delimiter(path)
-        message = "comma delimiter should return ',' but returns {0}".format(path)
+        message = "comma delimiter should return ',' but returns {0}".format(actual)
         assert actual is expected, message
 
     def test_on_tab_delimiter(self, tsv_file):
         expected = "\t"
         path = tsv_file
         actual = methods.get_delimiter(path)
-        message = "tab delimiter should return ',' but returns {0}".format(path)
+        message = "tab delimiter should return ',' but returns {0}".format(actual)
         assert actual is expected, message
 
     def test_on_colon_delimiter(self, colon_file):
         expected = ":"
         path = colon_file
         actual = methods.get_delimiter(path)
-        message = "colon delimiter should return ',' but returns {0}".format(path)
+        message = "colon delimiter should return ',' but returns {0}".format(actual)
         assert actual is expected, message
 
-    def test_exception(self):
-        pass
+    @pytest.mark.skip("dialect returns a value, implement later")
+    def test_exception(self, malformed_file):
+        expected = None
+        path = malformed_file
+        actual = methods.get_delimiter(path)
+        message = "None value should return but returns {0}".format(actual)
+        assert actual is expected, message
 
 
 class TestReadFile(object):
 
-    def test_on_regular_csv(self):
-        pass
+    @pytest.fixture
+    def csv_file(self, tmp_path):
+        file_name = "zillow.csv"
+        d = tmp_path / "sub"
+        d.mkdir()
+        path = d / file_name
+        content = """"Index", "Living Space (sq ft)", "Beds", "Baths", "Zip", "Year", "List Price ($)\n"
+        1, 2222, 3, 3.5, 32312, 1981, 250000\n
+        2, 1628, 3, 2,   32308, 2009, 185000\n
+        3, 3824, 5, 4,   32312, 1954, 399000\n
+        4, 1137, 3, 2,   32309, 1993, 150000\n
+        5, 3560, 6, 4,   32309, 1973, 315000"""
+        path.write_text(content)
+        yield path
 
-    def test_on_malformed_csv(self):
-        pass
+    @pytest.fixture
+    def get_df(self):
+        zil = {'Index': [1, 2, 3, 4, 5],
+               'Living Space (sq ft)': [2222, 1628, 3824, 1137, 3560],
+               'Beds': [3, 3, 5, 3, 6],
+               'Baths': [3.5, 2, 4, 2, 4],
+               'Zip': [32312, 32308, 32312, 32309, 32309],
+               'Year': [1981, 2009, 1954, 1993, 1973],
+               'List Price ($)': [250000, 185000, 399000, 150000, 315000]}
+        df = pd.DataFrame(zil, columns=['Index', 'Living Space (sq ft)', 'Beds', 'Baths',
+                                        'Zip', 'Year', 'List Price($)'])
+        yield df
+
+    def test_on_regular_csv(self, csv_file, get_df):
+        expected_df = get_df
+        path = csv_file
+        actual_df = methods.read_file(path)
+
+
 
     def test_on_wrong_path(self):
         pass
 
     def test_on_delimiter(self):
         pass
-
