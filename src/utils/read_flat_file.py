@@ -55,5 +55,6 @@ class ReadFile(ReadUtils):
         if boolean:
             delimiter = self.get_delimiter(path)
             df = pd.read_csv(path, delimiter=delimiter)
+        LOGGER.error("DataFrame could not be created, file path non-existent")
         return df
 

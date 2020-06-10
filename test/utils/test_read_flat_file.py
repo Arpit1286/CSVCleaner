@@ -182,11 +182,7 @@ class TestReadFile(object):
         assert expected_dtypes == actual_dtypes, message
 
     def test_on_wrong_path(self, get_df):
-        expected = True
+        expected = None
         path = "/some/wrong/path"
         actual = methods.read_file(path)
         assert expected == actual
-
-
-    def test_on_delimiter(self):
-        pass
