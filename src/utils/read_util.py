@@ -38,7 +38,7 @@ class ReadUtils:
         """
         pass
 
-    def get_column_type(self):
+    def get_column_type_from_df(self):
         """
         get the inferred column type from dataframe
         :return:
