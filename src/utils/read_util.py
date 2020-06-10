@@ -24,15 +24,15 @@ class ReadUtils:
         """
         pass
 
-    def get_header(self):
+    def get_df_header(self):
         """
         get the header from the dataframe
         :return:
         """
         pass
 
-    def get_schema(self):
-        """
+    def get_df_schema(self):
+        """"
         get the column schema from the dataframe
         :return:
         """

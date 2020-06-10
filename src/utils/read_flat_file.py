@@ -64,3 +64,22 @@ class ReadFile(ReadUtils):
         LOGGER.error("DataFrame could not be created, file path non-existent")
         return df
 
+    # TODO: implement below functions
+    def get_df_header(self, df):
+        pass
+
+    def get_df_schema(self, df):
+        pass
+
+    def get_column_type(self, df):
+        pass
+
+    def get_column_number(self, df, column_name):
+        pass
+
+    def get_column_values_list(self, df, column_name):
+        pass
+
+    def get_column_values_series(self, df, column_name):
+        pass
+
