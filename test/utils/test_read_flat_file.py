@@ -125,7 +125,7 @@ class TestGetDelimiter(object):
         expected = None
         path = malformed_file
         actual = methods.get_delimiter(path)
-        message = "None value should return but returns {0}".format(actual)
+        message = "value should return None but returns {0}".format(actual)
         assert actual is expected, message
 
 
@@ -137,12 +137,12 @@ class TestReadFile(object):
         d = tmp_path / "sub"
         d.mkdir()
         path = d / file_name
-        content = """"Index", "Living Space (sq ft)", "Beds", "Baths", "Zip", "Year", "List Price ($)\n"
-        1, 2222, 3, 3.5, 32312, 1981, 250000\n
-        2, 1628, 3, 2,   32308, 2009, 185000\n
-        3, 3824, 5, 4,   32312, 1954, 399000\n
-        4, 1137, 3, 2,   32309, 1993, 150000\n
-        5, 3560, 6, 4,   32309, 1973, 315000"""
+        content = """Index,Living Space (sq ft),Beds,Baths,Zip,Year,List Price ($)
+        1,2222,3,3.5,32312,1981,250000
+        2,1628,3,2,32308,2009,185000
+        3,3824,5,4,32312,1954,399000
+        4,1137,3,2,32309,1993,150000
+        5,3560,6,4,32309,1973,315000"""
         path.write_text(content)
         yield path
 
@@ -154,20 +154,39 @@ class TestReadFile(object):
                'Baths': [3.5, 2, 4, 2, 4],
                'Zip': [32312, 32308, 32312, 32309, 32309],
                'Year': [1981, 2009, 1954, 1993, 1973],
-               'List Price ($)': [250000, 185000, 399000, 150000, 315000]}
-        df = pd.DataFrame(zil, columns=['Index', 'Living Space (sq ft)', 'Beds', 'Baths',
-                                        'Zip', 'Year', 'List Price($)'])
+               'List Price ($)': [250000, 185000, 399000, 150000, 315000]
+               }
+        df = pd.DataFrame(data=zil)
         yield df
 
     def test_on_regular_csv(self, csv_file, get_df):
         expected_df = get_df
         path = csv_file
         actual_df = methods.read_file(path)
+        pd.testing.assert_frame_equal(expected_df, actual_df)
 
+    def test_regular_schema_columns(self, csv_file, get_df):
+        expected = get_df
+        actual = methods.read_file(csv_file)
+        expected_columns = list(expected.columns.values)
+        actual_columns = list(actual.columns.values)
+        message = "value should return \n{0} \nbut returns \n{1}".format(actual_columns, expected_columns)
+        assert expected_columns == actual_columns, message
 
+    def test_regular_schema_dtypes(self, csv_file, get_df):
+        expected = get_df
+        actual = methods.read_file(csv_file)
+        expected_dtypes = list(expected.dtypes) # list to compare
+        actual_dtypes = list(actual.dtypes)
+        message = "value should return \n{0} \nbut returns \n{1}".format(actual_dtypes, expected_dtypes)
+        assert expected_dtypes == actual_dtypes, message
 
-    def test_on_wrong_path(self):
-        pass
+    def test_on_wrong_path(self, get_df):
+        expected = True
+        path = "/some/wrong/path"
+        actual = methods.read_file(path)
+        assert expected == actual
+
 
     def test_on_delimiter(self):
         pass
