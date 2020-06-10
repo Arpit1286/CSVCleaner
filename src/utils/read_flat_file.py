@@ -124,8 +124,23 @@ class ReadFile(ReadUtils):
         :param df:
         :return:
         """
-
+        val_list = []
+        if column_name in df.columns:
+            val_list = df[column_name].tolist()
+        else:
+            LOGGER.error("Column not in dataframe, check the column list")
+        return val_list
 
     def get_column_values_series(self, df, column_name):
-        pass
-
+        """
+        get the column values as numpy Array
+        :param df:
+        :param column_name:
+        :return:
+        """
+        val_array = None
+        if column_name in df.columns:
+            val_array = df[column_name].to_numpy()
+        else:
+            LOGGER.error("Column not in dataframe, check the column list")
+        return val_array
