@@ -49,6 +49,7 @@ class ReadFile(ReadUtils):
     def read_file(self, path, strip=False):
         """
         read csv file as pandas dataframe
+        :type strip: bool
         :param strip: Default False, if true strip the str values of leading/trailing characters
         :param path: path to the file
         :return: dataframe from the file
@@ -66,10 +67,11 @@ class ReadFile(ReadUtils):
         LOGGER.error("DataFrame could not be created, file path non-existent")
         return df
 
-    # TODO: implement below functions
+    #Wrapper functions for dataframe methods.
     def get_df_header(self, df: pd.DataFrame):
         """
         get the header (column names) and column numbers
+        :type df: pd.DataFrame
         :param df: input dataframe
         :return: list of tuples with column name and location
         """
@@ -83,17 +85,19 @@ class ReadFile(ReadUtils):
     def get_df_schema(self, df: pd.DataFrame):
         """
         get the schema (column name and type)
-        :param df: input Dataframe
+        :type df: pd.DataFrame
+        :param df: input DataFrame
         :return: dict key: column name,  value: col_type
         """
         col_dict = dict(df.dtypes)
         return col_dict
 
-    def get_column_type_from_df(self, column_name, df):
+    def get_column_type_from_df(self, column_name, df: pd.DataFrame):
         """
         get the data type for a given column
         :param column_name: name of column
-        :param df: dataframe
+        :param df: DataFrame
+        :type df: pd.DataFrame
         :return: datatype string
         """
         type_obj = None
@@ -103,11 +107,12 @@ class ReadFile(ReadUtils):
             LOGGER.error("Column not in dataframe, check the column list")
         return type_obj
 
-    def get_column_number(self, column_name, df):
+    def get_column_number(self, column_name, df: pd.DataFrame):
         """
-        get the data type column number from dataframe
+        get the data type column number from DataFrame
         :param column_name: col name
-        :param df: input dataframe
+        :type df: pd.DataFrame
+        :param df: input DataFrame
         :return: col location
         """
         col_num = None
@@ -117,11 +122,12 @@ class ReadFile(ReadUtils):
             LOGGER.error("Column not in dataframe, check the column list")
         return col_num
 
-    def get_column_values_list(self, column_name, df):
+    def get_column_values_list(self, column_name, df: pd.DataFrame):
         """
         get the column values as a list
-        :param column_name:
-        :param df:
+        :type df: pd.DataFrame
+        :param df: input DataFrame
+        :param column_name: column name
         :return:
         """
         val_list = []
@@ -131,11 +137,12 @@ class ReadFile(ReadUtils):
             LOGGER.error("Column not in dataframe, check the column list")
         return val_list
 
-    def get_column_values_series(self, df, column_name):
+    def get_column_values_series(self, column_name, df: pd.DataFrame):
         """
         get the column values as numpy Array
-        :param df:
-        :param column_name:
+        :type df: pd.DataFrame
+        :param df: input DataFrame
+        :param column_name: column name
         :return:
         """
         val_array = None
