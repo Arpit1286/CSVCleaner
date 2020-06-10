@@ -44,17 +44,23 @@ class ReadFile(ReadUtils):
                 LOGGER.error(e)
         return None
 
-    def read_file(self, path):
+    def read_file(self, path, strip=False):
         """
         read csv file as pandas dataframe
-        :param path:
-        :return:
+        :param strip: Default False, if true strip the str values of leading/trailing characters
+        :param path: path to the file
+        :return: dataframe from the file
         """
         boolean = self.check_path(path)
         df = None
         if boolean:
-            delimiter = self.get_delimiter(path)
-            df = pd.read_csv(path, delimiter=delimiter)
+            if strip:
+                delimiter = self.get_delimiter(path)
+                df = pd.read_csv(path, delimiter=delimiter)
+                df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+            else:
+                delimiter = self.get_delimiter(path)
+                df = pd.read_csv(path, delimiter=delimiter)
         LOGGER.error("DataFrame could not be created, file path non-existent")
         return df
 
