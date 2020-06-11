@@ -7,6 +7,20 @@ from src import utils
 methods = utils.read_flat_file.ReadFile()
 
 
+@pytest.fixture
+def get_df():
+    zil = {'Index': [1, 2, 3, 4, 5],
+           'Living Space (sq ft)': [2222, 1628, 3824, 1137, 3560],
+           'Beds': [3, 3, 5, 3, 6],
+           'Baths': [3.5, 2, 4, 2, 4],
+           'Zip': [32312, 32308, 32312, 32309, 32309],
+           'Year': [1981, 2009, 1954, 1993, 1973],
+           'List Price ($)': [250000, 185000, 399000, 150000, 315000]
+           }
+    df = pd.DataFrame(data=zil)
+    yield df
+
+
 class TestCheckPath(object):
 
     @pytest.fixture
@@ -146,19 +160,6 @@ class TestReadFile(object):
         path.write_text(content)
         yield path
 
-    @pytest.fixture
-    def get_df(self):
-        zil = {'Index': [1, 2, 3, 4, 5],
-               'Living Space (sq ft)': [2222, 1628, 3824, 1137, 3560],
-               'Beds': [3, 3, 5, 3, 6],
-               'Baths': [3.5, 2, 4, 2, 4],
-               'Zip': [32312, 32308, 32312, 32309, 32309],
-               'Year': [1981, 2009, 1954, 1993, 1973],
-               'List Price ($)': [250000, 185000, 399000, 150000, 315000]
-               }
-        df = pd.DataFrame(data=zil)
-        yield df
-
     def test_on_regular_csv(self, csv_file, get_df):
         expected_df = get_df
         path = csv_file
@@ -181,8 +182,29 @@ class TestReadFile(object):
         message = "value should return \n{0} \nbut returns \n{1}".format(actual_dtypes, expected_dtypes)
         assert expected_dtypes == actual_dtypes, message
 
-    def test_on_wrong_path(self, get_df):
+    def test_on_wrong_path(self):
         expected = None
         path = "/some/wrong/path"
         actual = methods.read_file(path)
         assert expected == actual
+
+
+class TestGetDFHeader(object):
+
+    # regular scenario
+    def test_get_df_header(self, get_df):
+        expected_tuple = ('Beds', 2)
+        expected_header = [('Index', 0), ('Living Space (sq ft)', 1), ('Beds', 2),
+                           ('Baths', 3), ('Zip', 4), ('Year', 5), ('List Price ($)', 6)]
+        actual_df = get_df
+        actual_header = methods.get_df_header(actual_df)
+        actual_tuple = actual_header[2]
+        assert expected_header == actual_header
+        assert expected_tuple == actual_tuple
+
+
+class TestGetDFSchema(object):
+
+    def test_get_df_schema(self, get_df):
+        pass
+

@@ -76,8 +76,7 @@ class ReadFile(ReadUtils):
         :return: list of tuples with column name and location
         """
         header: List[Tuple[Any, Any]] = []
-        columns = df.columns.values
-        for i in columns:
+        for i in df.columns.values:
             col_name_index = (i, df.columns.get_loc(i))
             header.append(col_name_index)
         return header
@@ -134,7 +133,7 @@ class ReadFile(ReadUtils):
         if column_name in df.columns:
             val_list = df[column_name].tolist()
         else:
-            LOGGER.error("Column not in dataframe, check the column list")
+            LOGGER.error("Column not in DataFrame, check the column list")
         return val_list
 
     def get_column_values_series(self, column_name, df: pd.DataFrame):
