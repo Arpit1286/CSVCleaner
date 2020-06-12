@@ -214,3 +214,32 @@ class TestGetDFSchema(object):
         assert expected_dict == actual_dict
         assert expected_value == actual_value
 
+
+class TestGetColumnTypFromDF(object):
+
+    # regular scenario
+    def test_get_col_type_from_df(self, get_df):
+        actual_df = get_df
+        expected_type = 'float64'
+        actual_type = methods.get_column_type_from_df('Baths', actual_df)
+        assert actual_type == expected_type
+
+
+class TestGetColumnNumber(object):
+
+    # regular scenario
+    def test_get_col_number(self, get_df):
+        actual_df = get_df
+        expected_type = 'float64'
+        actual_type = methods.get_column_type_from_df('Baths', actual_df)
+        assert actual_type == expected_type
+
+
+class TestGetColumnValuesList(object):
+
+    # regular scenario
+    def test_get_col_values_list(self, get_df):
+        actual_df = get_df
+        expected_list = [3.5, 2.0, 4.0, 2.0, 4.0]
+        actual_list = methods.get_column_values_list('Baths', actual_df)
+        assert actual_list == expected_list
