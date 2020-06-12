@@ -1,6 +1,7 @@
 import pytest
 import os
 import pandas as pd
+import numpy as np
 
 from src import utils
 
@@ -177,7 +178,7 @@ class TestReadFile(object):
     def test_regular_schema_dtypes(self, csv_file, get_df):
         expected = get_df
         actual = methods.read_file(csv_file)
-        expected_dtypes = list(expected.dtypes) # list to compare
+        expected_dtypes = list(expected.dtypes)  # list to compare
         actual_dtypes = list(actual.dtypes)
         message = "value should return \n{0} \nbut returns \n{1}".format(actual_dtypes, expected_dtypes)
         assert expected_dtypes == actual_dtypes, message
@@ -243,3 +244,20 @@ class TestGetColumnValuesList(object):
         expected_list = [3.5, 2.0, 4.0, 2.0, 4.0]
         actual_list = methods.get_column_values_list('Baths', actual_df)
         assert actual_list == expected_list
+
+
+class TestGetColumnValuesSeries(object):
+
+    # check type
+    def test_get_col_values_series_type(self, get_df):
+        actual_df = get_df
+        actual_array = methods.get_column_values_series('Baths', actual_df)
+        message = "value returns {0}".format(type(actual_array))
+        assert type(actual_array) is np.ndarray, message
+
+    # regular scenario
+    def test_get_col_values(self, get_df):
+        expected_val = np.array([3.5, 2.0, 4.0, 2.0, 4.0])
+        actual_array = methods.get_column_values_series('Baths', get_df)
+        message = "value returns {0}".format(actual_array)
+        assert (actual_array == expected_val).all(), message
