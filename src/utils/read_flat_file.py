@@ -88,7 +88,10 @@ class ReadFile(ReadUtils):
         :param df: input DataFrame
         :return: dict key: column name,  value: col_type
         """
-        col_dict = dict(df.dtypes)
+        col_dict = {}
+        for i in df.columns:
+            value = str(df.dtypes[i])
+            col_dict.update({i: value})
         return col_dict
 
     def get_column_type_from_df(self, column_name, df: pd.DataFrame):

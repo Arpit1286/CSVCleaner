@@ -196,8 +196,7 @@ class TestGetDFHeader(object):
         expected_tuple = ('Beds', 2)
         expected_header = [('Index', 0), ('Living Space (sq ft)', 1), ('Beds', 2),
                            ('Baths', 3), ('Zip', 4), ('Year', 5), ('List Price ($)', 6)]
-        actual_df = get_df
-        actual_header = methods.get_df_header(actual_df)
+        actual_header = methods.get_df_header(get_df)
         actual_tuple = actual_header[2]
         assert expected_header == actual_header
         assert expected_tuple == actual_tuple
@@ -205,6 +204,13 @@ class TestGetDFHeader(object):
 
 class TestGetDFSchema(object):
 
+    # regular scenario
     def test_get_df_schema(self, get_df):
-        pass
+        expected_dict = {'Index': 'int64', 'Living Space (sq ft)': 'int64', 'Beds': 'int64',
+                         'Baths': 'float64', 'Zip': 'int64', 'Year': 'int64', 'List Price ($)': 'int64'}
+        expected_value = 'float64'
+        actual_dict = methods.get_df_schema(get_df)
+        actual_value = actual_dict['Baths']
+        assert expected_dict == actual_dict
+        assert expected_value == actual_value
 
